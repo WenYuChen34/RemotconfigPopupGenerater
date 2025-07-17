@@ -1,578 +1,808 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>創建行銷彈窗的json吧！</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        :root {
-            --bg-primary: #1a1a1a; /* 預設深色模式 */
-            --bg-secondary: #2d2d2d;
-            --bg-tertiary: #363636;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --border-color: #404040;
-            --accent-color: #3498db;
-            --accent-hover: #2980b9;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-            --code-bg: #2b2b2b;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>創建行銷彈窗的json吧！</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    :root {
+      --bg-primary: #1a1a1a; /* 預設深色模式 */
+      --bg-secondary: #2d2d2d;
+      --bg-tertiary: #363636;
+      --text-primary: #e0e0e0;
+      --text-secondary: #b0b0b0;
+      --border-color: #404040;
+      --accent-color: #3498db;
+      --accent-hover: #2980b9;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --code-bg: #2b2b2b;
+    }
 
-        [data-theme="light"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9f9f9;
-            --bg-tertiary: #e7e7e7;
-            --text-primary: #000000;
-            --text-secondary: #555555;
-            --border-color: #ccc;
-            --accent-color: #28a745;
-            --accent-hover: #218838;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-            --code-bg: #f4f4f4;
-        }
+    [data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9f9f9;
+      --bg-tertiary: #e7e7e7;
+      --text-primary: #000000;
+      --text-secondary: #555555;
+      --border-color: #ccc;
+      --accent-color: #28a745;
+      --accent-hover: #218838;
+      --error-color: #e74c3c;
+      --success-color: #2ecc71;
+      --code-bg: #f4f4f4;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-        .container {
-            display: flex;
-            flex-direction: row;
-            height: 100vh;
-        }
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
 
-        .left-panel, .right-panel {
-            flex: 1;
-            padding: 20px;
-            border-right: 1px solid var(--border-color);
-            overflow-y: auto;
-        }
+    .left-panel,
+    .right-panel {
+      flex: 1;
+      padding: 20px;
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+    }
 
-        .right-panel {
-            border-right: none;
-            background-color: var(--bg-secondary);
-        }
+    .right-panel {
+      border-right: none;
+      background-color: var(--bg-secondary);
+    }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-        h1 {
-            font-size: 24px;
-            margin: 0;
-        }
+    h1 {
+      font-size: 24px;
+      margin: 0;
+    }
 
-        .sub-header {
-            margin-top: 5px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
+    .sub-header {
+      margin-top: 5px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
 
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
+    a {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
-        }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
 
-        .required::after {
-            content: " *";
-            color: var(--error-color);
-        }
+    .required::after {
+      content: " *";
+      color: var(--error-color);
+    }
 
-        input, select, textarea {
-            width: calc(100% - 40px);
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-        }
+    input,
+    select,
+    textarea {
+      width: calc(100% - 40px);
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
 
-        input[type="url"] {
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-        }
+    input[type="url"] {
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
 
-        button {
-            padding: 10px 15px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    button {
+      padding: 10px 15px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-        button:hover {
-            background-color: var(--accent-hover);
-        }
+    button:hover {
+      background-color: var(--accent-hover);
+    }
 
-        .popup {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-        }
+    .popup {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+    }
 
-        .button-group {
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
+    .button-group {
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
 
-        #jsonOutput {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            white-space: pre-wrap;
-            background-color: var(--code-bg);
-            color: var(--text-primary);
-        }
+    #jsonOutput {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      white-space: pre-wrap;
+      background-color: var(--code-bg);
+      color: var(--text-primary);
+    }
 
-        .theme-switch {
-            display: flex;
-            align-items: center;
-        }
+    .theme-switch {
+      display: flex;
+      align-items: center;
+    }
 
-        .theme-switch input {
-            display: none;
-        }
+    .theme-switch input {
+      display: none;
+    }
 
-        .theme-switch label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
+    .theme-switch label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
 
-        .theme-switch span {
-            margin-right: 8px;
-        }
+    .theme-switch span {
+      margin-right: 8px;
+    }
 
-        .switch {
-            width: 40px;
-            height: 20px;
-            background-color: var(--border-color);
-            border-radius: 20px;
-            position: relative;
-            transition: background-color 0.3s;
-        }
+    .switch {
+      width: 40px;
+      height: 20px;
+      background-color: var(--border-color);
+      border-radius: 20px;
+      position: relative;
+      transition: background-color 0.3s;
+    }
 
-        .switch::before {
-            content: "";
-            width: 16px;
-            height: 16px;
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-        }
+    .switch::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s;
+    }
 
-        input:checked + .switch {
-            background-color: var(--accent-color);
-        }
+    input:checked + .switch {
+      background-color: var(--accent-color);
+    }
 
-        input:checked + .switch::before {
-            transform: translateX(20px);
-        }
+    input:checked + .switch::before {
+      transform: translateX(20px);
+    }
 
-        .copy-button {
-            margin-left: 10px;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+    .copy-button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        .copy-button:hover {
-            background-color: var(--accent-hover);
-        }
+    .copy-button:hover {
+      background-color: var(--accent-hover);
+    }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
 
-        .modal {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            height: auto;
-            margin: auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
-        }
+    .modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      height: auto;
+      margin: auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1001;
+    }
 
-        .modal p span {
-            color: var(--error-color);
-            font-weight: bold;
-        }
+    .modal p span {
+      color: var(--error-color);
+      font-weight: bold;
+    }
 
-        .error {
-            border: 2px solid var(--error-color);
-        }
+    .error {
+      border: 2px solid var(--error-color);
+    }
 
-        .img-preview {
-            max-width: 150px;
-            max-height: 150px;
-            margin-top: 10px;
-            border: 1px solid var(--border-color);
-        }
-    </style>
+    .img-preview {
+      max-width: 150px;
+      max-height: 150px;
+      margin-top: 10px;
+      border: 1px solid var(--border-color);
+    }
+  </style>
 </head>
-<body data-theme="dark"> <!-- 預設為深色模式 -->
-    <div class="container">
-        <!-- 左側表單區域 -->
-        <div class="left-panel">
-            <div class="header">
-                <h1>創建行銷彈窗的json吧！</h1>
-                <div class="theme-switch">
-                    <span>深色模式</span>
-                    <label>
-                        <input type="checkbox" id="themeToggle" checked>
-                        <div class="switch"></div>
-                    </label>
-                </div>
-            </div>
-            <p class="sub-header">
-                若操作上有遇到問題請聯繫仕祺
-            </p>
-            <form id="userForm">
-                <div id="popupsContainer"></div>
-                <button type="button" id="addPopupButton">新增彈窗</button>
-                <button type="button" id="clearButton">清除設定</button>
-                <button type="submit">提交</button>
-            </form>
+<body data-theme="dark">
+  <!-- 預設為深色模式 -->
+  <div class="container">
+    <!-- 左側表單區域 -->
+    <div class="left-panel">
+      <div class="header">
+        <h1>創建行銷彈窗的json吧！</h1>
+        <div class="theme-switch">
+          <span>深色模式</span>
+          <label>
+            <input type="checkbox" id="themeToggle" checked />
+            <div class="switch"></div>
+          </label>
         </div>
-
-        <!-- 右側輸出區域 -->
-        <div class="right-panel">
-            <h2 style="background-color: var(--bg-secondary); color: var(--text-primary); padding: 10px; border-radius: 5px;">
-                領取你的行銷彈窗JSON
-                <button class="copy-button" id="copyButton">一鍵複製</button>
-            </h2>
-            <pre id="jsonOutput">尚無輸出，請填寫左側表單後提交。</pre>
-        </div>
+      </div>
+      <p class="sub-header">若操作上有遇到問題請聯繫仕祺</p>
+      <form id="userForm">
+        <div id="popupsContainer"></div>
+        <button type="button" id="addPopupButton">新增彈窗</button>
+        <button type="button" id="clearButton">清除設定</button>
+        <button type="submit">提交</button>
+      </form>
     </div>
 
-    <!-- 時間錯誤彈窗 -->
-    <div id="timeErrorModal" class="modal-overlay">
-        <div class="modal">
-            <p>時間設定有誤，<span>開始時間不得晚於結束時間唷！</span></p>
-            <button id="timeErrorButton">我知道了</button>
-        </div>
+    <!-- 右側輸出區域 -->
+    <div class="right-panel">
+      <h2
+        style="
+          background-color: var(--bg-secondary);
+          color: var(--text-primary);
+          padding: 10px;
+          border-radius: 5px;
+        "
+      >
+        領取你的行銷彈窗JSON
+        <button class="copy-button" id="copyButton">一鍵複製</button>
+      </h2>
+      <pre id="jsonOutput">尚無輸出，請填寫左側表單後提交。</pre>
+      <div id="previewArea" style="margin-top: 20px;"></div>
     </div>
+  </div>
 
-    <!-- 刪除條件警告彈窗 -->
-    <div id="deleteWarningModal" class="modal-overlay">
-        <div class="modal">
-            <p>此行銷彈窗設定須至少保有一組！<span>至少保有一組</span></p>
-            <button id="deleteWarningButton">我知道了</button>
-        </div>
+  <!-- 時間錯誤彈窗 -->
+  <div id="timeErrorModal" class="modal-overlay">
+    <div class="modal">
+      <p>時間設定有誤，<span>開始時間不得晚於結束時間唷！</span></p>
+      <button id="timeErrorButton">我知道了</button>
     </div>
+  </div>
 
-    <script>
-        const popupsContainer = document.getElementById('popupsContainer');
-        const jsonOutput = document.getElementById('jsonOutput');
-        const timeErrorModal = document.getElementById('timeErrorModal');
-        const deleteWarningModal = document.getElementById('deleteWarningModal');
-        const timeErrorButton = document.getElementById('timeErrorButton');
-        const deleteWarningButton = document.getElementById('deleteWarningButton');
-        const copyButton = document.getElementById('copyButton');
-        const themeToggle = document.getElementById('themeToggle');
-        const addPopupButton = document.getElementById('addPopupButton');
+  <!-- 刪除條件警告彈窗 -->
+  <div id="deleteWarningModal" class="modal-overlay">
+    <div class="modal">
+      <p>此行銷彈窗設定須至少保有一組！<span>至少保有一組</span></p>
+      <button id="deleteWarningButton">我知道了</button>
+    </div>
+  </div>
 
-        function createPopup(id = popupsContainer.children.length + 1, userType = 1, imageUrl = '', webUrl = '', buttonLeftTitle = '', buttonLeftUrl = '', buttonRightTitle = '', buttonRightUrl = '', openType = 2, startTime = '', endTime = '') {
-            const popupDiv = document.createElement('div');
-            popupDiv.className = 'popup';
+  <script>
+    const popupsContainer = document.getElementById("popupsContainer");
+    const jsonOutput = document.getElementById("jsonOutput");
+    const timeErrorModal = document.getElementById("timeErrorModal");
+    const deleteWarningModal = document.getElementById("deleteWarningModal");
+    const timeErrorButton = document.getElementById("timeErrorButton");
+    const deleteWarningButton = document.getElementById("deleteWarningButton");
+    const copyButton = document.getElementById("copyButton");
+    const themeToggle = document.getElementById("themeToggle");
+    const addPopupButton = document.getElementById("addPopupButton");
 
-            popupDiv.innerHTML = `
+    function createPopup(
+      id = popupsContainer.children.length + 1,
+      userType = 1,
+      imageUrl = "",
+      webUrl = "",
+      buttonLeftTitle = "",
+      buttonLeftUrl = "",
+      buttonLeftBgColor = "",
+      buttonLeftTextColor = "",
+      buttonRightTitle = "",
+      buttonRightUrl = "",
+      buttonRightBgColor = "",
+      buttonRightTextColor = "",
+      openType = 2,
+      startTime = "",
+      endTime = ""
+    ) {
+      const popupDiv = document.createElement("div");
+      popupDiv.className = "popup";
+
+      popupDiv.innerHTML = `
                 <h3>彈窗 ${id}</h3>
                 <input type="hidden" id="popupId${id}" value="${id}">
-                
+
                 <label class="required" for="userType${id}">用戶類型：</label>
                 <select id="userType${id}" required>
                     <option value="">請選擇</option>
-                    <option value="0" ${userType === 0 ? 'selected' : ''}>全部用戶</option>
-                    <option value="1" ${userType === 1 ? 'selected' : ''}>專業版用戶</option>
-                    <option value="2" ${userType === 2 ? 'selected' : ''}>免費版用戶</option>
+                    <option value="0" ${
+                      userType === 0 ? "selected" : ""
+                    }>全部用戶</option>
+                    <option value="1" ${
+                      userType === 1 ? "selected" : ""
+                    }>專業版用戶</option>
+                    <option value="2" ${
+                      userType === 2 ? "selected" : ""
+                    }>免費版用戶</option>
                 </select>
 
                 <label class="required" for="imageUrl${id}">圖片URL：</label>
-                <input type="url" id="imageUrl${id}" placeholder="請輸入完整的圖片URL" value="${imageUrl}" required>
+                <input type="url" id="imageUrl${id}" placeholder="請輸入完整的圖片URL，例如 https://i.imgur.com/xxxxx.jpg" value="${imageUrl}" required oninput="updateImagePreview(${id})" />
                 <div>
-                    <img id="preview${id}" src="${imageUrl}" alt="圖片預覽" class="img-preview" style="${imageUrl ? '' : 'display:none;'}">
+                    <img id="preview${id}" src="${imageUrl}" alt="圖片預覽" class="img-preview" style="${
+        imageUrl ? "" : "display:none;"
+      }" />
                 </div>
 
                 <label for="webUrl${id}">網頁URL：</label>
-                <input type="url" id="webUrl${id}" placeholder="請輸入完整的URL" value="${webUrl}">
+                <input type="url" id="webUrl${id}" placeholder="請輸入完整的URL" value="${webUrl}" />
 
                 <div class="button-group">
                     <h4>左側按鈕</h4>
                     <label for="buttonLeftTitle${id}">按鈕文字：</label>
-                    <input type="text" id="buttonLeftTitle${id}" placeholder="請輸入按鈕文字" value="${buttonLeftTitle}">
+                    <input type="text" id="buttonLeftTitle${id}" placeholder="請輸入按鈕文字" value="${buttonLeftTitle}" />
 
                     <label for="buttonLeftUrl${id}">按鈕URL：</label>
-                    <input type="url" id="buttonLeftUrl${id}" placeholder="請輸入完整的URL" value="${buttonLeftUrl}">
+                    <input type="url" id="buttonLeftUrl${id}" placeholder="請輸入完整的URL" value="${buttonLeftUrl}" />
+
+                    <label for="buttonLeftBgColor${id}">按鈕底色：</label>
+                    <input type="text" id="buttonLeftBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftBgColor}" />
+
+                    <label for="buttonLeftTextColor${id}">文字顏色：</label>
+                    <input type="text" id="buttonLeftTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftTextColor}" />
                 </div>
 
                 <div class="button-group">
                     <h4>右側按鈕</h4>
                     <label for="buttonRightTitle${id}">按鈕文字：</label>
-                    <input type="text" id="buttonRightTitle${id}" placeholder="請輸入按鈕文字" value="${buttonRightTitle}">
+                    <input type="text" id="buttonRightTitle${id}" placeholder="請輸入按鈕文字" value="${buttonRightTitle}" />
 
                     <label for="buttonRightUrl${id}">按鈕URL：</label>
-                    <input type="url" id="buttonRightUrl${id}" placeholder="請輸入完整的URL" value="${buttonRightUrl}">
+                    <input type="url" id="buttonRightUrl${id}" placeholder="請輸入完整的URL" value="${buttonRightUrl}" />
+
+                    <label for="buttonRightBgColor${id}">按鈕底色：</label>
+                    <input type="text" id="buttonRightBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightBgColor}" />
+
+                    <label for="buttonRightTextColor${id}">文字顏色：</label>
+                    <input type="text" id="buttonRightTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightTextColor}" />
                 </div>
 
                 <label class="required" for="openType${id}">開啟方式：</label>
                 <select id="openType${id}" required>
-                    <option value="">請選擇</option>
-                    <option value="1" ${openType === 1 ? 'selected' : ''}>一次性</option>
-                    <option value="2" ${openType === 2 ? 'selected' : ''}>每次</option>
-                    <option value="3" ${openType === 3 ? 'selected' : ''}>每日一次</option>
+                    <option value="1" ${
+                      openType === 1 ? "selected" : ""
+                    }>指定按鈕開啟</option>
+                    <option value="2" ${
+                      openType === 2 ? "selected" : ""
+                    }>頁面載入即開啟</option>
                 </select>
 
-                <label for="startTime${id}">開始時間：</label>
-                <input type="text" id="startTime${id}" placeholder="YYYY/MM/DD HH:MM" value="${startTime}">
+                <label class="required" for="startTime${id}">開始時間：</label>
+                <input type="text" id="startTime${id}" placeholder="請選擇開始時間" value="${startTime}" required />
 
-                <label for="endTime${id}">結束時間：</label>
-                <input type="text" id="endTime${id}" placeholder="YYYY/MM/DD HH:MM" value="${endTime}">
+                <label class="required" for="endTime${id}">結束時間：</label>
+                <input type="text" id="endTime${id}" placeholder="請選擇結束時間" value="${endTime}" required />
 
-                <div style="margin-top: 10px;">
-                    <button type="button" onclick="removePopup(this)">刪除彈窗</button>
-                </div>
+                <button type="button" class="deletePopupButton">刪除此彈窗</button>
             `;
 
-            popupsContainer.appendChild(popupDiv);
+      // 綁定刪除按鈕事件
+      popupDiv
+        .querySelector(".deletePopupButton")
+        .addEventListener("click", () => {
+          if (popupsContainer.children.length <= 1) {
+            showDeleteWarningModal();
+            return;
+          }
+          popupDiv.remove();
+          updatePopupIds();
+        });
 
-            // 初始化日期選擇器
-            const startPicker = flatpickr(`#startTime${id}`, { 
-                enableTime: true, 
-                dateFormat: "Y/m/d H:i",
-                onChange: function(selectedDates, dateStr) {
-                    checkTimesForPopup(id);
-                }
-            });
-            
-            const endPicker = flatpickr(`#endTime${id}`, { 
-                enableTime: true, 
-                dateFormat: "Y/m/d H:i",
-                onChange: function(selectedDates, dateStr) {
-                    checkTimesForPopup(id);
-                }
-            });
+      // 初始化flatpickr時間選擇器
+      const startInput = popupDiv.querySelector(`#startTime${id}`);
+      const endInput = popupDiv.querySelector(`#endTime${id}`);
 
-            // 圖片預覽功能
-            const imageUrlInput = document.getElementById(`imageUrl${id}`);
-            const imagePreview = document.getElementById(`preview${id}`);
-            
-            imageUrlInput.addEventListener('input', function() {
-                if (this.value) {
-                    imagePreview.src = this.value;
-                    imagePreview.style.display = 'block';
-                } else {
-                    imagePreview.style.display = 'none';
-                }
-            });
+      flatpickr(startInput, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        onChange: function (selectedDates, dateStr, instance) {
+          // 時間驗證
+          const endDate = endInput._flatpickr.selectedDates[0];
+          if (endDate && selectedDates[0] > endDate) {
+            showTimeErrorModal();
+            instance.clear();
+          }
+        },
+      });
+      flatpickr(endInput, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        onChange: function (selectedDates, dateStr, instance) {
+          const startDate = startInput._flatpickr.selectedDates[0];
+          if (startDate && selectedDates[0] < startDate) {
+            showTimeErrorModal();
+            instance.clear();
+          }
+        },
+      });
+
+      popupsContainer.appendChild(popupDiv);
+    }
+
+    // 更新所有彈窗的標題及 id
+    function updatePopupIds() {
+      const popups = popupsContainer.children;
+      for (let i = 0; i < popups.length; i++) {
+        const popup = popups[i];
+        popup.querySelector("h3").textContent = `彈窗 ${i + 1}`;
+        popup.querySelector("input[type=hidden]").value = i + 1;
+
+        // 更新所有 input 元素 id
+        [
+          "userType",
+          "imageUrl",
+          "webUrl",
+          "buttonLeftTitle",
+          "buttonLeftUrl",
+          "buttonLeftBgColor",
+          "buttonLeftTextColor",
+          "buttonRightTitle",
+          "buttonRightUrl",
+          "buttonRightBgColor",
+          "buttonRightTextColor",
+          "openType",
+          "startTime",
+          "endTime",
+        ].forEach((field) => {
+          const input = popup.querySelector(`#${field}${i + 2}`); // 原本是 i+2，改成 i+1
+          if (input) {
+            const newId = `${field}${i + 1}`;
+            // 修改 id
+            input.id = newId;
+            // 如果有 label 也同步修改 for
+            const label = popup.querySelector(`label[for=${field}${i + 2}]`);
+            if (label) label.setAttribute("for", newId);
+          }
+        });
+
+        // 修正圖片預覽img id
+        const previewImg = popup.querySelector("img[id^='preview']");
+        if (previewImg) {
+          previewImg.id = `preview${i + 1}`;
+        }
+      }
+    }
+
+    // 顯示時間錯誤彈窗
+    function showTimeErrorModal() {
+      timeErrorModal.style.display = "flex";
+    }
+
+    timeErrorButton.addEventListener("click", () => {
+      timeErrorModal.style.display = "none";
+    });
+
+    // 顯示刪除警告彈窗
+    function showDeleteWarningModal() {
+      deleteWarningModal.style.display = "flex";
+    }
+
+    deleteWarningButton.addEventListener("click", () => {
+      deleteWarningModal.style.display = "none";
+    });
+
+    // 監聽新增彈窗按鈕
+    addPopupButton.addEventListener("click", () => {
+      createPopup();
+    });
+
+    // 清除表單
+    document.getElementById("clearButton").addEventListener("click", () => {
+      if (confirm("確定要清除所有設定嗎？")) {
+        popupsContainer.innerHTML = "";
+        createPopup();
+        jsonOutput.textContent = "尚無輸出，請填寫左側表單後提交。";
+        document.getElementById("previewArea").innerHTML = "";
+      }
+    });
+
+    // 預設建立一個彈窗
+    createPopup();
+
+    // 主表單提交事件
+    document
+      .getElementById("userForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // 收集資料並驗證
+        const popups = [];
+        let hasError = false;
+
+        for (const popupDiv of popupsContainer.children) {
+          const id = popupDiv.querySelector("input[type=hidden]").value;
+
+          const userTypeSelect = popupDiv.querySelector(`#userType${id}`);
+          const imageUrlInput = popupDiv.querySelector(`#imageUrl${id}`);
+          const webUrlInput = popupDiv.querySelector(`#webUrl${id}`);
+
+          const btnLeftTitleInput = popupDiv.querySelector(
+            `#buttonLeftTitle${id}`
+          );
+          const btnLeftUrlInput = popupDiv.querySelector(`#buttonLeftUrl${id}`);
+          const btnLeftBgColorInput = popupDiv.querySelector(
+            `#buttonLeftBgColor${id}`
+          );
+          const btnLeftTextColorInput = popupDiv.querySelector(
+            `#buttonLeftTextColor${id}`
+          );
+
+          const btnRightTitleInput = popupDiv.querySelector(
+            `#buttonRightTitle${id}`
+          );
+          const btnRightUrlInput = popupDiv.querySelector(`#buttonRightUrl${id}`);
+          const btnRightBgColorInput = popupDiv.querySelector(
+            `#buttonRightBgColor${id}`
+          );
+          const btnRightTextColorInput = popupDiv.querySelector(
+            `#buttonRightTextColor${id}`
+          );
+
+          const openTypeSelect = popupDiv.querySelector(`#openType${id}`);
+          const startTimeInput = popupDiv.querySelector(`#startTime${id}`);
+          const endTimeInput = popupDiv.querySelector(`#endTime${id}`);
+
+          // 簡單驗證必填欄位
+          if (
+            !userTypeSelect.value ||
+            !imageUrlInput.value ||
+            !openTypeSelect.value ||
+            !startTimeInput.value ||
+            !endTimeInput.value
+          ) {
+            alert(`彈窗 ${id} 有必填欄位未填寫`);
+            hasError = true;
+            break;
+          }
+
+          // 時間驗證：開始 <= 結束
+          if (
+            new Date(startTimeInput.value) > new Date(endTimeInput.value)
+          ) {
+            alert(`彈窗 ${id} 的開始時間不可晚於結束時間`);
+            hasError = true;
+            break;
+          }
+
+          popups.push({
+            userType: Number(userTypeSelect.value),
+            imageUrl: imageUrlInput.value.trim(),
+            webUrl: webUrlInput.value.trim(),
+            buttonLeftTitle: btnLeftTitleInput.value.trim(),
+            buttonLeftUrl: btnLeftUrlInput.value.trim(),
+            buttonLeftBgColor: btnLeftBgColorInput.value.trim(),
+            buttonLeftTextColor: btnLeftTextColorInput.value.trim(),
+            buttonRightTitle: btnRightTitleInput.value.trim(),
+            buttonRightUrl: btnRightUrlInput.value.trim(),
+            buttonRightBgColor: btnRightBgColorInput.value.trim(),
+            buttonRightTextColor: btnRightTextColorInput.value.trim(),
+            openType: Number(openTypeSelect.value),
+            startTime: startTimeInput.value,
+            endTime: endTimeInput.value,
+          });
         }
 
-        function checkTimesForPopup(id) {
-            const startTimeInput = document.querySelector(`#startTime${id}`);
-            const endTimeInput = document.querySelector(`#endTime${id}`);
-            
-            if (startTimeInput.value && endTimeInput.value) {
-                const startTime = new Date(startTimeInput.value);
-                const endTime = new Date(endTimeInput.value);
-                
-                if (startTime > endTime) {
-                    startTimeInput.classList.add('error');
-                    endTimeInput.classList.add('error');
-                    timeErrorModal.style.display = 'flex';
-                } else {
-                    startTimeInput.classList.remove('error');
-                    endTimeInput.classList.remove('error');
-                }
-            }
+        if (hasError) {
+          return;
         }
 
-        function removePopup(button) {
-            if (popupsContainer.children.length <= 1) {
-                deleteWarningModal.style.display = 'flex';
-            } else {
-                const popupDiv = button.closest('.popup');
-                popupsContainer.removeChild(popupDiv);
-                updatePopupNumbers();
-            }
+        // 產生 JSON 結構
+        const jsonObj = {
+          popups,
+        };
+
+        const jsonStr = JSON.stringify(jsonObj, null, 2);
+        jsonOutput.textContent = jsonStr;
+
+        renderPreview(popups);
+      });
+
+    // 複製 JSON
+    copyButton.addEventListener("click", () => {
+      if (jsonOutput.textContent.trim() === "" || jsonOutput.textContent.includes("尚無輸出")) {
+        alert("目前沒有可複製的內容！");
+        return;
+      }
+      navigator.clipboard.writeText(jsonOutput.textContent).then(() => {
+        alert("已複製到剪貼簿！");
+      });
+    });
+
+    // 主動更新圖片預覽
+    function updateImagePreview(id) {
+      const input = document.getElementById(`imageUrl${id}`);
+      const img = document.getElementById(`preview${id}`);
+
+      if (!input || !img) return;
+
+      const url = input.value.trim();
+
+      if (url === "") {
+        img.style.display = "none";
+        img.src = "";
+        return;
+      }
+
+      // 判斷是不是有效的圖片 URL (簡單判斷副檔名)
+      if (/\.(jpg|jpeg|png|gif|bmp|webp|svg)(\?.*)?$/i.test(url)) {
+        img.src = url;
+        img.style.display = "block";
+      } else if (
+        // imgur不帶副檔名，也可以支援
+        /^https?:\/\/(i\.)?imgur\.com\/[a-zA-Z0-9]+$/i.test(url)
+      ) {
+        // 自動加.jpg
+        img.src = url + ".jpg";
+        img.style.display = "block";
+      } else {
+        img.style.display = "none";
+        img.src = "";
+      }
+    }
+
+    // 用於彈窗展示的簡易樣式和結構
+    function renderPreview(popups) {
+      const previewArea = document.getElementById("previewArea");
+      previewArea.innerHTML = "";
+
+      popups.forEach((popup, index) => {
+        const popupDiv = document.createElement("div");
+        popupDiv.style =
+          "margin-bottom:30px; border:1px solid var(--border-color); padding: 15px; border-radius: 8px; background: var(--bg-primary);";
+
+        // 彈窗圖片
+        const img = document.createElement("img");
+        img.src = popup.imageUrl;
+        img.alt = `彈窗圖片 ${index + 1}`;
+        img.style = "max-width: 100%; max-height: 180px; display: block; margin-bottom: 10px;";
+        popupDiv.appendChild(img);
+
+        // 按鈕區
+        const btnContainer = document.createElement("div");
+        btnContainer.style = "display:flex; gap: 12px;";
+
+        // 左按鈕
+        if (popup.buttonLeftTitle) {
+          const leftBtn = document.createElement("a");
+          leftBtn.href = popup.buttonLeftUrl || "#";
+          leftBtn.target = "_blank";
+          leftBtn.rel = "noopener noreferrer";
+          leftBtn.textContent = popup.buttonLeftTitle;
+          leftBtn.style = `
+                        padding: 8px 14px;
+                        background-color: ${popup.buttonLeftBgColor || "#666"};
+                        color: ${popup.buttonLeftTextColor || "#fff"};
+                        border-radius: 4px;
+                        text-decoration: none;
+                        display: inline-block;
+                        cursor: pointer;
+                        user-select: none;
+                    `;
+          btnContainer.appendChild(leftBtn);
         }
 
-        function updatePopupNumbers() {
-            const popups = popupsContainer.children;
-            for (let i = 0; i < popups.length; i++) {
-                const id = i + 1;
-                popups[i].querySelector('h3').textContent = `彈窗 ${id}`;
-                popups[i].querySelector(`input[type="hidden"]`).value = id;
-            }
+        // 右按鈕
+        if (popup.buttonRightTitle) {
+          const rightBtn = document.createElement("a");
+          rightBtn.href = popup.buttonRightUrl || "#";
+          rightBtn.target = "_blank";
+          rightBtn.rel = "noopener noreferrer";
+          rightBtn.textContent = popup.buttonRightTitle;
+          rightBtn.style = `
+                        padding: 8px 14px;
+                        background-color: ${popup.buttonRightBgColor || "#999"};
+                        color: ${popup.buttonRightTextColor || "#fff"};
+                        border-radius: 4px;
+                        text-decoration: none;
+                        display: inline-block;
+                        cursor: pointer;
+                        user-select: none;
+                    `;
+          btnContainer.appendChild(rightBtn);
         }
 
-        document.getElementById('userForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            let isValid = true;
+        popupDiv.appendChild(btnContainer);
 
-            const popups = Array.from(popupsContainer.children).map((popupDiv, index) => {
-                const id = parseInt(popupDiv.querySelector(`input[type="hidden"]`).value, 10);
-                const userTypeElement = popupDiv.querySelector(`#userType${id}`);
-                const imageUrlElement = popupDiv.querySelector(`#imageUrl${id}`);
-                const webUrlElement = popupDiv.querySelector(`#webUrl${id}`);
-                const buttonLeftTitleElement = popupDiv.querySelector(`#buttonLeftTitle${id}`);
-                const buttonLeftUrlElement = popupDiv.querySelector(`#buttonLeftUrl${id}`);
-                const buttonRightTitleElement = popupDiv.querySelector(`#buttonRightTitle${id}`);
-                const buttonRightUrlElement = popupDiv.querySelector(`#buttonRightUrl${id}`);
-                const openTypeElement = popupDiv.querySelector(`#openType${id}`);
-                const startTimeInput = popupDiv.querySelector(`#startTime${id}`);
-                const endTimeInput = popupDiv.querySelector(`#endTime${id}`);
+        // 其他訊息
+        const info = document.createElement("p");
+        info.style = "margin-top: 10px; font-size: 14px; color: var(--text-secondary);";
+        info.textContent = `用戶類型：${getUserTypeName(popup.userType)}，開啟方式：${getOpenTypeName(popup.openType)}，有效時間：${popup.startTime} ~ ${popup.endTime}`;
+        popupDiv.appendChild(info);
 
-                // 轉換為正確的數據類型
-                const userType = parseInt(userTypeElement.value, 10);
-                const imageUrl = imageUrlElement.value;
-                const webUrl = webUrlElement.value;
-                const buttonLeft = {
-                    title: buttonLeftTitleElement.value,
-                    url: buttonLeftUrlElement.value
-                };
-                const buttonRight = {
-                    title: buttonRightTitleElement.value,
-                    url: buttonRightUrlElement.value
-                };
-                const openType = parseInt(openTypeElement.value, 10);
-                const startTime = startTimeInput.value;
-                const endTime = endTimeInput.value;
+        previewArea.appendChild(popupDiv);
+      });
+    }
 
-                // 檢查時間
-                if (startTimeInput.value && endTimeInput.value) {
-                    const startTimeDate = new Date(startTimeInput.value);
-                    const endTimeDate = new Date(endTimeInput.value);
-                    
-                    if (startTimeDate > endTimeDate) {
-                        isValid = false;
-                        startTimeInput.classList.add('error');
-                        endTimeInput.classList.add('error');
-                    } else {
-                        startTimeInput.classList.remove('error');
-                        endTimeInput.classList.remove('error');
-                    }
-                }
+    function getUserTypeName(type) {
+      switch (type) {
+        case 0:
+          return "全部用戶";
+        case 1:
+          return "專業版用戶";
+        case 2:
+          return "免費版用戶";
+        default:
+          return "未知";
+      }
+    }
 
-                return {
-                    id: index + 1,
-                    userType,
-                    imageUrl,
-                    webUrl,
-                    buttonLeft,
-                    buttonRight,
-                    openType,
-                    startTime,
-                    endTime
-                };
-            });
+    function getOpenTypeName(type) {
+      switch (type) {
+        case 1:
+          return "指定按鈕開啟";
+        case 2:
+          return "頁面載入即開啟";
+        default:
+          return "未知";
+      }
+    }
 
-            if (!isValid) {
-                timeErrorModal.style.display = 'flex';
-                return;
-            }
-
-            jsonOutput.textContent = JSON.stringify(popups, null, 2);
-        });
-
-        addPopupButton.addEventListener('click', function() {
-            createPopup();
-        });
-
-        timeErrorButton.addEventListener('click', () => {
-            timeErrorModal.style.display = 'none';
-        });
-
-        deleteWarningButton.addEventListener('click', () => {
-            deleteWarningModal.style.display = 'none';
-        });
-
-        document.getElementById('clearButton').addEventListener('click', function() {
-            const popups = popupsContainer.querySelectorAll('.popup');
-            popups.forEach(popup => {
-                // 清空所有輸入框
-                popup.querySelectorAll('input:not([type="hidden"]), textarea').forEach(input => {
-                    input.value = '';
-                });
-
-                // 重置所有下拉選單
-                popup.querySelectorAll('select').forEach(select => {
-                    select.selectedIndex = 0;
-                });
-
-                // 隱藏圖片預覽
-                const preview = popup.querySelector('img.img-preview');
-                if(preview) {
-                    preview.style.display = 'none';
-                }
-            });
-        });
-
-        copyButton.addEventListener('click', () => {
-            navigator.clipboard.writeText(jsonOutput.textContent).then(() => {
-                alert('JSON 程式碼已複製到剪貼簿！');
-            }).catch((err) => {
-                alert('複製失敗，請手動複製！');
-            });
-        });
-
-        themeToggle.addEventListener('change', () => {
-            const theme = themeToggle.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            document.body.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--bg-primary`);
-            document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue(`--text-primary`);
-        });
-
-        // 初始化，至少創建一個彈窗
-        createPopup(1, 1, '', '', '', '', '', '', 2, '', '');
-    </script>
+    // 主題切換功能
+    themeToggle.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        document.body.setAttribute("data-theme", "dark");
+        e.target.previousElementSibling.textContent = "深色模式";
+      } else {
+        document.body.setAttribute("data-theme", "light");
+        e.target.previousElementSibling.textContent = "淺色模式";
+      }
+    });
+  </script>
 </body>
 </html>
