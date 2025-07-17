@@ -1,0 +1,2 @@
+# RemotconfigPopupGenerater
+有手就能生成行銷彈窗
