@@ -154,6 +154,40 @@
       color: var(--text-primary);
     }
 
+    /* 預覽區域樣式優化 */
+    #previewArea {
+      padding: 20px;
+      background: var(--bg-primary);
+      border-radius: 10px;
+      min-height: 400px;
+    }
+
+    /* 手機框架動畫效果 */
+    .mobile-frame {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mobile-frame:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+
+    /* 彈窗浮現動畫 */
+    @keyframes popupFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .popup-content {
+      animation: popupFadeIn 0.3s ease-out;
+    }
+
     .theme-switch {
       display: flex;
       align-items: center;
@@ -263,6 +297,43 @@
       margin-top: 10px;
       border: 1px solid var(--border-color);
     }
+
+    /* 顏色選擇器樣式優化 */
+    input[type="color"] {
+      width: 40px !important;
+      height: 32px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    input[type="color"]:hover {
+      border-color: var(--accent-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 3px;
+    }
+
+    /* 顏色輸入組合容器 */
+    .color-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .color-input-group input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -280,7 +351,7 @@
           </label>
         </div>
       </div>
-      <p class="sub-header">若操作上有遇到問題請聯繫仕祺</p>
+      <p class="sub-header">若操作上有遇到問題請聯繫溫妮</p>
       <form id="userForm">
         <div id="popupsContainer"></div>
         <button type="button" id="addPopupButton">新增彈窗</button>
@@ -385,32 +456,44 @@
 
                 <div class="button-group">
                     <h4>左側按鈕</h4>
-                    <label for="buttonLeftTitle${id}">按鈕文字：</label>
-                    <input type="text" id="buttonLeftTitle${id}" placeholder="請輸入按鈕文字" value="${buttonLeftTitle}" />
+                    <label class="required" for="buttonLeftTitle${id}">按鈕文字：</label>
+                    <input type="text" id="buttonLeftTitle${id}" placeholder="請輸入按鈕文字" value="${buttonLeftTitle}" required />
 
                     <label for="buttonLeftUrl${id}">按鈕URL：</label>
                     <input type="url" id="buttonLeftUrl${id}" placeholder="請輸入完整的URL" value="${buttonLeftUrl}" />
 
                     <label for="buttonLeftBgColor${id}">按鈕底色：</label>
-                    <input type="text" id="buttonLeftBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftBgColor}" />
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="buttonLeftBgColorPicker${id}" value="${buttonLeftBgColor || '#666666'}" style="width: 40px; height: 32px; border: none; border-radius: 4px; cursor: pointer;" onchange="syncColorToText(${id}, 'buttonLeftBgColor')" />
+                        <input type="text" id="buttonLeftBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftBgColor}" style="flex: 1;" oninput="syncTextToColor(${id}, 'buttonLeftBgColor')" />
+                    </div>
 
                     <label for="buttonLeftTextColor${id}">文字顏色：</label>
-                    <input type="text" id="buttonLeftTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftTextColor}" />
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="buttonLeftTextColorPicker${id}" value="${buttonLeftTextColor || '#ffffff'}" style="width: 40px; height: 32px; border: none; border-radius: 4px; cursor: pointer;" onchange="syncColorToText(${id}, 'buttonLeftTextColor')" />
+                        <input type="text" id="buttonLeftTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonLeftTextColor}" style="flex: 1;" oninput="syncTextToColor(${id}, 'buttonLeftTextColor')" />
+                    </div>
                 </div>
 
                 <div class="button-group">
                     <h4>右側按鈕</h4>
-                    <label for="buttonRightTitle${id}">按鈕文字：</label>
-                    <input type="text" id="buttonRightTitle${id}" placeholder="請輸入按鈕文字" value="${buttonRightTitle}" />
+                    <label class="required" for="buttonRightTitle${id}">按鈕文字：</label>
+                    <input type="text" id="buttonRightTitle${id}" placeholder="請輸入按鈕文字" value="${buttonRightTitle}" required />
 
                     <label for="buttonRightUrl${id}">按鈕URL：</label>
                     <input type="url" id="buttonRightUrl${id}" placeholder="請輸入完整的URL" value="${buttonRightUrl}" />
 
                     <label for="buttonRightBgColor${id}">按鈕底色：</label>
-                    <input type="text" id="buttonRightBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightBgColor}" />
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="buttonRightBgColorPicker${id}" value="${buttonRightBgColor || '#999999'}" style="width: 40px; height: 32px; border: none; border-radius: 4px; cursor: pointer;" onchange="syncColorToText(${id}, 'buttonRightBgColor')" />
+                        <input type="text" id="buttonRightBgColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightBgColor}" style="flex: 1;" oninput="syncTextToColor(${id}, 'buttonRightBgColor')" />
+                    </div>
 
                     <label for="buttonRightTextColor${id}">文字顏色：</label>
-                    <input type="text" id="buttonRightTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightTextColor}" />
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="color" id="buttonRightTextColorPicker${id}" value="${buttonRightTextColor || '#ffffff'}" style="width: 40px; height: 32px; border: none; border-radius: 4px; cursor: pointer;" onchange="syncColorToText(${id}, 'buttonRightTextColor')" />
+                        <input type="text" id="buttonRightTextColor${id}" placeholder="請輸入色碼，例如#FFFFFF" value="${buttonRightTextColor}" style="flex: 1;" oninput="syncTextToColor(${id}, 'buttonRightTextColor')" />
+                    </div>
                 </div>
 
                 <label class="required" for="openType${id}">開啟方式：</label>
@@ -511,6 +594,35 @@
           }
         });
 
+        // 更新顏色選擇器的 id
+        [
+          "buttonLeftBgColorPicker",
+          "buttonLeftTextColorPicker",
+          "buttonRightBgColorPicker",
+          "buttonRightTextColorPicker",
+        ].forEach((field) => {
+          const colorPicker = popup.querySelector(`#${field}${i + 2}`);
+          if (colorPicker) {
+            colorPicker.id = `${field}${i + 1}`;
+            // 更新 onchange 事件中的 id 參數
+            const baseField = field.replace('Picker', '');
+            colorPicker.setAttribute('onchange', `syncColorToText(${i + 1}, '${baseField}')`);
+          }
+        });
+
+        // 更新文字輸入框的 oninput 事件
+        [
+          "buttonLeftBgColor",
+          "buttonLeftTextColor", 
+          "buttonRightBgColor",
+          "buttonRightTextColor",
+        ].forEach((field) => {
+          const textInput = popup.querySelector(`#${field}${i + 1}`);
+          if (textInput && textInput.hasAttribute('oninput')) {
+            textInput.setAttribute('oninput', `syncTextToColor(${i + 1}, '${field}')`);
+          }
+        });
+
         // 修正圖片預覽img id
         const previewImg = popup.querySelector("img[id^='preview']");
         if (previewImg) {
@@ -602,6 +714,8 @@
           if (
             !userTypeSelect.value ||
             !imageUrlInput.value ||
+            !btnLeftTitleInput.value.trim() ||
+            !btnRightTitleInput.value.trim() ||
             !openTypeSelect.value ||
             !startTimeInput.value ||
             !endTimeInput.value
@@ -621,17 +735,22 @@
           }
 
           popups.push({
+            id: Number(id),
             userType: Number(userTypeSelect.value),
             imageUrl: imageUrlInput.value.trim(),
             webUrl: webUrlInput.value.trim(),
-            buttonLeftTitle: btnLeftTitleInput.value.trim(),
-            buttonLeftUrl: btnLeftUrlInput.value.trim(),
-            buttonLeftBgColor: btnLeftBgColorInput.value.trim(),
-            buttonLeftTextColor: btnLeftTextColorInput.value.trim(),
-            buttonRightTitle: btnRightTitleInput.value.trim(),
-            buttonRightUrl: btnRightUrlInput.value.trim(),
-            buttonRightBgColor: btnRightBgColorInput.value.trim(),
-            buttonRightTextColor: btnRightTextColorInput.value.trim(),
+            buttonLeft: {
+              title: btnLeftTitleInput.value.trim(),
+              url: btnLeftUrlInput.value.trim(),
+              backgroundColor: btnLeftBgColorInput.value.trim(),
+              textColor: btnLeftTextColorInput.value.trim()
+            },
+            buttonRight: {
+              title: btnRightTitleInput.value.trim(),
+              url: btnRightUrlInput.value.trim(),
+              backgroundColor: btnRightBgColorInput.value.trim(),
+              textColor: btnRightTextColorInput.value.trim()
+            },
             openType: Number(openTypeSelect.value),
             startTime: startTimeInput.value,
             endTime: endTimeInput.value,
@@ -642,12 +761,8 @@
           return;
         }
 
-        // 產生 JSON 結構
-        const jsonObj = {
-          popups,
-        };
-
-        const jsonStr = JSON.stringify(jsonObj, null, 2);
+        // 產生 JSON 結構（直接輸出彈窗陣列）
+        const jsonStr = JSON.stringify(popups, null, 2);
         jsonOutput.textContent = jsonStr;
 
         renderPreview(popups);
@@ -696,76 +811,160 @@
       }
     }
 
-    // 用於彈窗展示的簡易樣式和結構
+    // 用於彈窗展示的簡易樣式和結構（手機版風格）
     function renderPreview(popups) {
       const previewArea = document.getElementById("previewArea");
       previewArea.innerHTML = "";
 
       popups.forEach((popup, index) => {
-        const popupDiv = document.createElement("div");
-        popupDiv.style =
-          "margin-bottom:30px; border:1px solid var(--border-color); padding: 15px; border-radius: 8px; background: var(--bg-primary);";
+        // 創建手機框架容器
+        const mobileFrame = document.createElement("div");
+        mobileFrame.className = "mobile-frame";
+        mobileFrame.style = `
+          margin-bottom: 30px;
+          width: 320px;
+          height: 500px;
+          border: 8px solid #333;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          margin-left: auto;
+          margin-right: auto;
+        `;
 
-        // 彈窗圖片
+        // 彈窗容器（白色背景，圓角邊框）
+        const popupDiv = document.createElement("div");
+        popupDiv.className = "popup-content";
+        popupDiv.style = `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 280px;
+          background: white;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        `;
+
+        // 彈窗圖片（固定寬度，高度自適應，完整顯示，無邊框）
         const img = document.createElement("img");
         img.src = popup.imageUrl;
         img.alt = `彈窗圖片 ${index + 1}`;
-        img.style = "max-width: 100%; max-height: 180px; display: block; margin-bottom: 10px;";
+        img.style = `
+          width: 280px;
+          height: auto;
+          max-height: 350px;
+          object-fit: contain;
+          display: block;
+          border-radius: 0;
+        `;
         popupDiv.appendChild(img);
 
-        // 按鈕區
+        // 按鈕區域（底部區域，與圖片無縫連接）
         const btnContainer = document.createElement("div");
-        btnContainer.style = "display:flex; gap: 12px;";
+        btnContainer.style = `
+          display: flex;
+          gap: 8px;
+          padding: 12px;
+          background: white;
+          border-top: 1px solid #f0f0f0;
+        `;
 
         // 左按鈕
-        if (popup.buttonLeftTitle) {
+        if (popup.buttonLeft && popup.buttonLeft.title) {
           const leftBtn = document.createElement("a");
-          leftBtn.href = popup.buttonLeftUrl || "#";
+          leftBtn.href = popup.buttonLeft.url || "#";
           leftBtn.target = "_blank";
           leftBtn.rel = "noopener noreferrer";
-          leftBtn.textContent = popup.buttonLeftTitle;
+          leftBtn.textContent = popup.buttonLeft.title;
           leftBtn.style = `
-                        padding: 8px 14px;
-                        background-color: ${popup.buttonLeftBgColor || "#666"};
-                        color: ${popup.buttonLeftTextColor || "#fff"};
-                        border-radius: 4px;
-                        text-decoration: none;
-                        display: inline-block;
-                        cursor: pointer;
-                        user-select: none;
-                    `;
+            flex: 1;
+            padding: 10px;
+            background-color: ${popup.buttonLeft.backgroundColor || "#666"};
+            color: ${popup.buttonLeft.textColor || "#fff"};
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          `;
+          leftBtn.onmouseover = function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+          };
+          leftBtn.onmouseout = function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+          };
           btnContainer.appendChild(leftBtn);
         }
 
         // 右按鈕
-        if (popup.buttonRightTitle) {
+        if (popup.buttonRight && popup.buttonRight.title) {
           const rightBtn = document.createElement("a");
-          rightBtn.href = popup.buttonRightUrl || "#";
+          rightBtn.href = popup.buttonRight.url || "#";
           rightBtn.target = "_blank";
           rightBtn.rel = "noopener noreferrer";
-          rightBtn.textContent = popup.buttonRightTitle;
+          rightBtn.textContent = popup.buttonRight.title;
           rightBtn.style = `
-                        padding: 8px 14px;
-                        background-color: ${popup.buttonRightBgColor || "#999"};
-                        color: ${popup.buttonRightTextColor || "#fff"};
-                        border-radius: 4px;
-                        text-decoration: none;
-                        display: inline-block;
-                        cursor: pointer;
-                        user-select: none;
-                    `;
+            flex: 1;
+            padding: 10px;
+            background-color: ${popup.buttonRight.backgroundColor || "#999"};
+            color: ${popup.buttonRight.textColor || "#fff"};
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+          `;
+          rightBtn.onmouseover = function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+          };
+          rightBtn.onmouseout = function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+          };
           btnContainer.appendChild(rightBtn);
         }
 
         popupDiv.appendChild(btnContainer);
+        mobileFrame.appendChild(popupDiv);
 
-        // 其他訊息
-        const info = document.createElement("p");
-        info.style = "margin-top: 10px; font-size: 14px; color: var(--text-secondary);";
-        info.textContent = `用戶類型：${getUserTypeName(popup.userType)}，開啟方式：${getOpenTypeName(popup.openType)}，有效時間：${popup.startTime} ~ ${popup.endTime}`;
-        popupDiv.appendChild(info);
+        // 資訊顯示區（在手機框架外）
+        const info = document.createElement("div");
+        info.style = `
+          margin-top: 15px;
+          padding: 12px;
+          font-size: 13px;
+          color: var(--text-secondary);
+          background: var(--bg-secondary);
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+          text-align: center;
+        `;
+        info.innerHTML = `
+          <strong>彈窗 ${popup.id}</strong><br>
+          用戶類型：${getUserTypeName(popup.userType)}<br>
+          開啟方式：${getOpenTypeName(popup.openType)}<br>
+          有效時間：${popup.startTime} ~ ${popup.endTime}
+        `;
 
-        previewArea.appendChild(popupDiv);
+        // 創建整體容器
+        const container = document.createElement("div");
+        container.appendChild(mobileFrame);
+        container.appendChild(info);
+
+        previewArea.appendChild(container);
       });
     }
 
@@ -803,6 +1002,29 @@
         e.target.previousElementSibling.textContent = "淺色模式";
       }
     });
+
+    // 顏色選擇器和文字輸入框同步功能
+    function syncColorToText(id, colorType) {
+      const colorPicker = document.getElementById(`${colorType}Picker${id}`);
+      const textInput = document.getElementById(`${colorType}${id}`);
+      
+      if (colorPicker && textInput) {
+        textInput.value = colorPicker.value;
+      }
+    }
+
+    function syncTextToColor(id, colorType) {
+      const colorPicker = document.getElementById(`${colorType}Picker${id}`);
+      const textInput = document.getElementById(`${colorType}${id}`);
+      
+      if (colorPicker && textInput) {
+        // 檢查輸入的是否為有效的顏色碼
+        const colorValue = textInput.value.trim();
+        if (/^#[0-9A-Fa-f]{6}$/.test(colorValue)) {
+          colorPicker.value = colorValue;
+        }
+      }
+    }
   </script>
 </body>
 </html>
