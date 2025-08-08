@@ -498,19 +498,25 @@
 
                 <label class="required" for="openType${id}">開啟方式：</label>
                 <select id="openType${id}" required>
-                    <option value="1" ${
+                  <option value="0" ${
+                      openType === 0 ? "selected" : ""
+                    }>關閉</option>  
+                  <option value="1" ${
                       openType === 1 ? "selected" : ""
-                    }>指定按鈕開啟</option>
+                    }>每天第一次開啟APP出現公告</option>
                     <option value="2" ${
                       openType === 2 ? "selected" : ""
-                    }>頁面載入即開啟</option>
+                    }>每次開啟APP出現公告</option>
+                    <option value="3" ${
+                      openType === 3 ? "selected" : ""
+                    }>只出現一次</option>
                 </select>
 
-                <label class="required" for="startTime${id}">開始時間：</label>
-                <input type="text" id="startTime${id}" placeholder="請選擇開始時間" value="${startTime}" required />
+                <label class="optional" for="startTime${id}">開始時間：</label>
+                <input type="text" id="startTime${id}" placeholder="請選擇開始時間" value="${startTime}" />
 
-                <label class="required" for="endTime${id}">結束時間：</label>
-                <input type="text" id="endTime${id}" placeholder="請選擇結束時間" value="${endTime}" required />
+                <label class="optional" for="endTime${id}">結束時間：</label>
+                <input type="text" id="endTime${id}" placeholder="請選擇結束時間" value="${endTime}" />
 
                 <button type="button" class="deletePopupButton">刪除此彈窗</button>
             `;
@@ -716,9 +722,7 @@
             !imageUrlInput.value ||
             !btnLeftTitleInput.value.trim() ||
             !btnRightTitleInput.value.trim() ||
-            !openTypeSelect.value ||
-            !startTimeInput.value ||
-            !endTimeInput.value
+            !openTypeSelect.value 
           ) {
             alert(`彈窗 ${id} 有必填欄位未填寫`);
             hasError = true;
